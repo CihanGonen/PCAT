@@ -44,25 +44,22 @@ app.get('/add', (req, res) => {
 });
 
 app.post('/photos', async (req, res) => {
-  await Photo.create(req.body);
-  res.redirect('/');
-});
+  const uploadDir = 'public/uploads';
 
-const uploadDir = 'public/uploads';
+  if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir);
+  }
 
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir);
-}
+  let uploadeImage = req.files.image;
+  let uploadPath = __dirname + '/public/uploads/' + uploadeImage.name;
 
-let uploadeImage = req.files.image;
-let uploadPath = __dirname + '/public/uploads/' + uploadeImage.name;
-
-uploadeImage.mv(uploadPath, async () => {
-  await Photo.create({
-    ...req.body,
-    image: '/uploads/' + uploadeImage.name,
+  uploadeImage.mv(uploadPath, async () => {
+    await Photo.create({
+      ...req.body,
+      image: '/uploads/' + uploadeImage.name,
+    });
+    res.redirect('/');
   });
-  res.redirect('/');
 });
 
 const port = 3000;
