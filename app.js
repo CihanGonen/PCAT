@@ -2,6 +2,7 @@ const path = require('path');
 const fs = require('fs');
 const express = require('express');
 const fileUpload = require('express-fileupload');
+const methodOverride = require('method-override');
 const mongoose = require('mongoose');
 const Photo = require('./models/Photo');
 
@@ -17,6 +18,7 @@ mongoose.connect('mongodb://localhost/pcat-test-db', {
 app.set('view engine', 'ejs');
 
 //MIDDLEWARES
+app.use(methodOverride('_method'));
 app.use(fileUpload());
 app.use(express.static('public'));
 app.use(express.urlencoded({ extended: true }));
@@ -60,6 +62,19 @@ app.post('/photos', async (req, res) => {
     });
     res.redirect('/');
   });
+});
+
+app.get('/photos/edit/:id', async (req, res) => {
+  const photo = await Photo.findById(req.params.id);
+  res.render('edit', { photo });
+});
+
+app.put('/photos/:id', async (req, res) => {
+  const photo = await Photo.findOne({ _id: req.params.id });
+  photo.title = req.body.title;
+  photo.description = req.body.description;
+  photo.save();
+  res.redirect(`/photos/${req.params.id}`);
 });
 
 const port = 3000;
