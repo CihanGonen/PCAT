@@ -45,14 +45,24 @@
                 </div>
 
                     <!-- Catalog Paging Buttons -->
-                    <div>
+                    <div class="d-flex justify-content-center">
+                        <% if(pages>0) { %>
                         <ul class="nav tm-paging-links">
-                            <li class="nav-item active"><a href="#" class="nav-link tm-paging-link">1</a></li>
-                            <li class="nav-item"><a href="#" class="nav-link tm-paging-link">2</a></li>
-                            <li class="nav-item"><a href="#" class="nav-link tm-paging-link">3</a></li>
-                            <li class="nav-item"><a href="#" class="nav-link tm-paging-link">4</a></li>
-                            <li class="nav-item"><a href="#" class="nav-link tm-paging-link">></a></li>
+                            <% if (current>1) { %>
+                            <li class="nav-item"><a href="?page=<%= Number(current-1) %>" class="nav-link tm-paging-link"><</a></li>
+                            <% } %>
+                            <% for(let i=1;i<=pages;i++) { %>
+                                <% if(i==current) { %>
+                                   <li class="nav-item active"><a href="?page=<%= i %>" class="nav-link tm-paging-link"><%= i %></a></li>
+                                <% }else {%>
+                                    <li class="nav-item"><a href="?page=<%= i %>" class="nav-link tm-paging-link"><%= i %></a></li>
+                                <% } %>
+                            <% } %>
+                            <% if (current<pages) { %>
+                                <li class="nav-item"><a href="?page=<%= Number(current)+1 %>" class="nav-link tm-paging-link">></a></li>
+                            <% } %>
                         </ul>
+                        <% } %>
                     </div>
                 </main>
                 <%- include('partials/_footer') -%>
