@@ -1,16 +1,22 @@
 const express = require('express');
 const fileUpload = require('express-fileupload');
 const methodOverride = require('method-override');
-const mongoose = require('mongoose');
+const MongoClient = require('mongodb').MongoClient;
 const PhotoController = require('./controllers/photoControllers');
 const PageController = require('./controllers/pageControllers');
 const app = express();
 
-//connect to DB
-mongoose.connect('mongodb://localhost/pcat-test-db', {
+//CONNECT TO DB
+const uri =
+  'mongodb+srv://cihangonen:D4uYTospHilaKarH@cluster0.qegjz.mongodb.net/pac-tdb?retryWrites=true&w=majority';
+const client = new MongoClient(uri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-  useFindAndModify: false,
+});
+client.connect((err) => {
+  const collection = client.db('test').collection('devices');
+  console.log('db connected');
+  client.close();
 });
 
 //TEMPLATE ENGINE
@@ -34,7 +40,7 @@ app.get('/about', PageController.getAboutPage);
 app.get('/add', PageController.getAddPage);
 app.get('/photos/edit/:id', PageController.getEditPage);
 
-const port = 3000;
+const port = process.env.PORT || 5000;
 app.listen(port, () => {
   console.log(`Sunucu ${port} portunda başlatıldı`);
 });
