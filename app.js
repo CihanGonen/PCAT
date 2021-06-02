@@ -1,23 +1,20 @@
 const express = require('express');
 const fileUpload = require('express-fileupload');
 const methodOverride = require('method-override');
-const MongoClient = require('mongodb').MongoClient;
+const mongoose = require('mongoose');
 const PhotoController = require('./controllers/photoControllers');
 const PageController = require('./controllers/pageControllers');
 const app = express();
 
 //CONNECT TO DB
-const uri =
-  'mongodb+srv://cihangonen:D4uYTospHilaKarH@cluster0.qegjz.mongodb.net/pac-tdb?retryWrites=true&w=majority';
-const client = new MongoClient(uri, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
-client.connect((err) => {
-  const collection = client.db('test').collection('devices');
-  console.log('db connected');
-  client.close();
-});
+mongoose.connect(
+  'mongodb+srv://cihangonen:D4uYTospHilaKarH@cluster0.qegjz.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',
+  {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false,
+  }
+);
 
 //TEMPLATE ENGINE
 app.set('view engine', 'ejs');
